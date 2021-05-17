@@ -22,6 +22,7 @@ struct ContentView: View {
                 }).padding()
             }.onAppear(perform: {
                 state.requestAccessToLocationData()
+                state.getArtists()
             }).navigationBarTitle("My Address")
         }
     }
