@@ -8,10 +8,11 @@
 import Foundation
 import CoreLocation
 
-class LocationHandler: NSObject, CLLocationManagerDelegate, ObservableObject {
+class LocationHandler: NSObject, CLLocationManagerDelegate {
     let manager = CLLocationManager()
     let geocoder = CLGeocoder()
-    @Published var lastKnownLocation: String = ""
+    //this is not a strong reference - allows this reference to state to be taken out of memory
+    weak var stateController: StateController?
     
     override init() {
         super.init()
@@ -33,11 +34,11 @@ class LocationHandler: NSObject, CLLocationManagerDelegate, ObservableObject {
         if let firstLocation = locations.first {
             geocoder.reverseGeocodeLocation(firstLocation, completionHandler: { (placemarks, error) in
                 if error != nil {
-                    self.lastKnownLocation = "Could not perform lookup of location from coordinate information"
+                    self.stateController?.lastKnownLocation = "Could not perform lookup of location from coordinate information"
                 } else {
                     if let firstPlacemark = placemarks?[0] {
                         //this syntax with the ?? is called nil coalescing. It says if this is nil, assign the value after the ??
-                        self.lastKnownLocation = firstPlacemark.getLocationBreakdown()
+                        self.stateController?.lastKnownLocation = firstPlacemark.getLocationBreakdown()
                     }
                 }
             })
@@ -45,7 +46,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        lastKnownLocation = "Error when finding location"
+        self.stateController?.lastKnownLocation = "Error when finding location"
     }
     
 }
