@@ -14,18 +14,8 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Form {
-                    Text("Street: \(locationHandler.lastKnownLocationDictionary["thoroughfare"] ?? "N/A")")
-                        .padding()
-                    Text("District: \(locationHandler.lastKnownLocationDictionary["subLocality"] ?? "N/A")")
-                        .padding()
-                    Text("Town: \(locationHandler.lastKnownLocationDictionary["locality"] ?? "N/A")")
-                        .padding()
-                    Text("Postal Code: \(locationHandler.lastKnownLocationDictionary["postalCode"] ?? "N/A")")
-                        .padding()
-                    Text("Country: \(locationHandler.lastKnownLocationDictionary["country"] ?? "N/A")")
-                        .padding()
-                }
+                Text(locationHandler.lastKnownLocation)
+                    .padding()
                 Spacer()
                 Button("Find Music", action: {
                     locationHandler.requestLocation()
