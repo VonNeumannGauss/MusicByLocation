@@ -40,4 +40,17 @@ class StateController: ObservableObject {
             
         }.resume()
     }
+    
+    func parseJSON(json: Data) -> ArtistResponse? {
+        let decoder = JSONDecoder()
+        
+        do {
+            let artistResponse = try decoder.decode(ArtistResponse.self, from: json)
+            return artistResponse
+        } catch {
+            print("Error decoding JSON")
+            return nil
+        }
+        
+    }
 }
