@@ -8,5 +8,10 @@
 import Foundation
 
 struct Artist: Codable {
-    var artistName: String 
+    var name: String
+    
+    //custom decoding can be done by adding CodingKeys. This is needed when the variables names here and the actual JSON variable names differ, so this tells Swift what to assign where. 
+    private enum CodingKeys: String, CodingKey {
+        case name = "artistName"
+    }
 }
