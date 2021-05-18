@@ -17,12 +17,15 @@ struct ContentView: View {
                 Text(state.lastKnownLocation)
                     .padding()
                 Spacer()
+                Text(state.artistNames)
+                    .padding()
+                Spacer()
                 Button("Find Music", action: {
                     state.findMusic()
                 }).padding()
             }.onAppear(perform: {
                 state.requestAccessToLocationData()
-                state.getArtists()
+                //state.getArtists()
             }).navigationBarTitle("My Address")
         }
     }

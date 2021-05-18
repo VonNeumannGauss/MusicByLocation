@@ -38,7 +38,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
                 } else {
                     if let firstPlacemark = placemarks?[0] {
                         //this syntax with the ?? is called nil coalescing. It says if this is nil, assign the value after the ??
-                        self.stateController?.lastKnownLocation = firstPlacemark.getLocationBreakdown()
+                        self.stateController?.lastKnownLocation = firstPlacemark.locality ?? "N/A"
                     }
                 }
             })
