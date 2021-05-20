@@ -9,18 +9,30 @@ import Foundation
 //better to use this to separate out what classes do - so don't have locationHandler getting location and controlling state
 
 class StateController: ObservableObject {
+    
+    let locationHandler = LocationHandler()
+    let ITunesAdaptor = iTunesAdaptor()
+    
+    @Published var artistNames: String = ""
     @Published var lastKnownLocation: String = "" {
         didSet {
-            getArtists(location: self.lastKnownLocation)
+            //trailing closure syntax
+            //a REFERENCE to updateArtistsByLocation is passed in, not the function itself
+            ITunesAdaptor.getArtists(location: self.lastKnownLocation, completion: updateArtistsByLocation)
         }
     }
-    @Published var artistNames: String = ""
-   
-    let locationHandler = LocationHandler()
     
     func findMusic() {
         locationHandler.requestLocation()
-        //getArtists()
+    }
+    
+    func updateArtistsByLocation(artists: [Artist]?) {
+        let names = artists?.map {
+            return $0.name
+        }
+        DispatchQueue.main.async {
+            self.artistNames = names?.joined(separator: ", ") ?? "Error finding artists near you"
+        }
     }
     
     func requestAccessToLocationData() {
@@ -28,42 +40,4 @@ class StateController: ObservableObject {
         locationHandler.requestAuthorization()
     }
     
-    func getArtists(location: String) {
-        print("FDHSFDSHFDS")
-        guard let url = URL(string:"https://itunes.apple.com/search?term=\(location)&entity=musicArtist")
-        else {
-            print("Invalid URL")
-            return
-        }
-        
-        let request = URLRequest(url: url)
-        
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                if let response = self.parseJSON(json: data) {
-                    //map from array of artists to array of strings
-                    let names = response.results.map {
-                        return $0.name
-                    }
-                    DispatchQueue.main.async {
-                        self.artistNames = names.joined(separator: ", ")
-                    }
-                }
-            }
-            
-        }.resume()
-    }
-    
-    func parseJSON(json: Data) -> ArtistResponse? {
-        let decoder = JSONDecoder()
-        
-        do {
-            let artistResponse = try decoder.decode(ArtistResponse.self, from: json)
-            return artistResponse
-        } catch {
-            print("Error decoding JSON")
-            return nil
-        }
-        
-    }
 }
