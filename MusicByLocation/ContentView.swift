@@ -14,18 +14,18 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text(state.lastKnownLocation)
-                    .padding()
-                Spacer()
-                Text(state.artistNames)
-                    .padding()
+                List {
+                    Text(state.lastKnownLocation)
+                        .padding()
+                    Text(state.artistNames)
+                        .padding()
+                }
                 Spacer()
                 Button("Find Music", action: {
                     state.findMusic()
                 }).padding()
             }.onAppear(perform: {
                 state.requestAccessToLocationData()
-                //state.getArtists()
             }).navigationBarTitle("My Address")
         }
     }
