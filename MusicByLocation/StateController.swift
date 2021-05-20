@@ -14,11 +14,12 @@ class StateController: ObservableObject {
     let ITunesAdaptor = iTunesAdaptor()
     
     @Published var artistNames: String = ""
+    @Published var artistsThemselves: [Artist] = []
     @Published var lastKnownLocation: String = "" {
         didSet {
             //trailing closure syntax
             //a REFERENCE to updateArtistsByLocation is passed in, not the function itself
-            ITunesAdaptor.getArtists(location: self.lastKnownLocation, completion: updateArtistsByLocation)
+            ITunesAdaptor.getArtists(location: self.lastKnownLocation, completion: updateArtistsByLocationInArtistForm)
         }
     }
     
@@ -26,12 +27,20 @@ class StateController: ObservableObject {
         locationHandler.requestLocation()
     }
     
-    func updateArtistsByLocation(artists: [Artist]?) {
+    func updateArtistsByLocationInStringForm(artists: [Artist]?) {
         let names = artists?.map {
             return $0.name
         }
         DispatchQueue.main.async {
             self.artistNames = names?.joined(separator: ", ") ?? "Error finding artists near you"
+        }
+    }
+    
+    func updateArtistsByLocationInArtistForm(artists: [Artist]?) {
+        print(self.artistsThemselves)
+        print("HELLLO")
+        DispatchQueue.main.async {
+            self.artistsThemselves = artists ?? []
         }
     }
     

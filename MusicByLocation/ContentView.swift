@@ -15,10 +15,17 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 List {
+                    Text("Hello")
+                    ForEach(state.artistsThemselves) { artist in
+                        Text(artist.name)
+                        Text(artist.genre)
+                    }
                     Text(state.lastKnownLocation)
                         .padding()
+                    /*
                     Text(state.artistNames)
                         .padding()
+                     */
                 }
                 Spacer()
                 Button("Find Music", action: {
