@@ -14,14 +14,17 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                List {
-                    Text("Hello")
-                    ForEach(state.artistsThemselves) { artist in
-                        Text(artist.name)
-                        Text(artist.genre)
+                Form {
+                    //Text("Hello")
+                    ForEach(state.artistsThemselves, id: \.self.id) { artist in
+                        LazyVStack {
+                            Link("Artist Name: \(artist.name)", destination:  artist.url)
+                            Text("Genre: \(artist.genre)")
+                        }
                     }
-                    Text(state.lastKnownLocation)
+                    /*Text(state.lastKnownLocation)
                         .padding()
+                    */
                     /*
                     Text(state.artistNames)
                         .padding()
@@ -33,7 +36,7 @@ struct ContentView: View {
                 }).padding()
             }.onAppear(perform: {
                 state.requestAccessToLocationData()
-            }).navigationBarTitle("My Address")
+            }).navigationBarTitle("Music Near Me")
         }
     }
         
